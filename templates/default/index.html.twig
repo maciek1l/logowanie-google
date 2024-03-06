@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultController!
+{% endblock %}
+
+{% block body %}
+	<pre>
+{{ dump(app.user) }}
+    </pre>
+
+	<a href="/logout">Wyloguj</a>
+{% endblock %}
