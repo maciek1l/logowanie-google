@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -23,9 +25,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $googleID = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $googleAccessToken = null;
-
     /**
      * @var list<string> The user roles
      */
@@ -35,8 +34,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $Username = null;
 
     public function getId(): ?int
     {
@@ -63,18 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGoogleID(string $googleID): static
     {
         $this->googleID = $googleID;
-
-        return $this;
-    }
-
-    public function getGoogleAccessToken(): ?string
-    {
-        return $this->googleAccessToken;
-    }
-
-    public function setGoogleAccessToken(string $googleAccessToken): static
-    {
-        $this->googleAccessToken = $googleAccessToken;
 
         return $this;
     }
@@ -116,7 +106,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -135,5 +125,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->Username;
+    }
+
+    public function setUsername(string $Username): static
+    {
+        $this->Username = $Username;
+
+        return $this;
     }
 }

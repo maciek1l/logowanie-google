@@ -26,8 +26,8 @@ security:
                 resource_owners:
                     google:             "/login/check-google"
                 login_path:   /login
-                use_forward:  false
-                failure_path: /login
+                # use_forward:  false
+                failure_path: hwi_oauth_connect_registration
                 oauth_user_provider:
                     service: my.oauth_aware.user_provider.service
 
@@ -41,6 +41,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/test, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/connect, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_USER }
